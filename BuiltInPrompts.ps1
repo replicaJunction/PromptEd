@@ -64,6 +64,28 @@ function pe_GreaterThan{ <#GreaterThan#>
     Write-Host ">" -NoNewLine
 }
 
+function pe_GreaterThanOrHash{ <#GreaterThanOrHash#>
+    # Displays a greater than symbol if the current PowerShell session is
+    # running in the context of a normal user, or a hash symbol if running in
+    # Administrator context.
+
+    # Checking for admin rights can take a little while, so we only want to do
+    # this once.
+    if ($script:adminChar -eq $null)
+    {
+        $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = [Security.Principal.WindowsPrincipal] $identity
+        if ($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+        {
+            $script:adminChar = '#'
+        } else {
+            $script:adminChar = '>'
+        }
+    }
+
+    Write-Host $script:adminChar -NoNewline
+}
+
 function pe_BracketedTime{ <#BracketedTime#>
     Write-Host -ForeGroundColor $script:promptColors["Time"] -NoNewLine "[$(Get-Date -Format "ddd MMM dd HH:mm:ss")]"
 }
