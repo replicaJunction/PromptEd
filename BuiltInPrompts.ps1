@@ -3,6 +3,7 @@ Add-PromptColor Path $Host.UI.RawUI.ForegroundColor
 Add-PromptColor Preamble Magenta
 Add-PromptColor Time Blue
 Add-PromptColor Brackets Green
+Add-PromptColor PSPrefix $Host.UI.RawUI.ForegroundColor
 
 # Helper functions common to various prompt elements
 function script:Get-CurrentLocation
@@ -24,6 +25,10 @@ function pe_UNAtCNBrackets { <#UNAtCNBrackets #>
     Write-Host -ForeGroundColor $script:promptColors["Brackets"] "[" -NoNewLine
     pe_UNAtCN
     Write-Host -ForeGroundColor $script:promptColors["Brackets"] "]" -NoNewLine
+}
+
+function pe_PSPrefix {
+    Write-Host -ForegroundColor $script:promptColors["PSPrefix"] "PS" -NoNewline
 }
 
 function pe_FullPath { <#FullPath #>
@@ -73,6 +78,13 @@ function pe_PoshGitStatus{ <#PoshGitStatus#>
 function pe_NoSeparator { <# No Separator #> }
 
 # Built-in prompt definitions
+Add-BuiltInPrompt Default @(
+    $function:pe_PSPrefix,
+    $function:pe_FullPath,
+    $function:pe_NoSeparator,
+    $function:pe_GreaterThan
+)
+
 Add-BuiltInPrompt JustPath @(
     $function:pe_FullPath,
     $function:pe_NoSeparator,
